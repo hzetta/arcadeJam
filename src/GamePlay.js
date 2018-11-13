@@ -55,6 +55,10 @@ GamePlayManager = {
         game.physics.p2.enable([ this.carlos ]);
         game.physics.p2.enable([ this.pity ]);
 
+        // Forma de pelota
+
+        this.pelota.body.setCircle (25,0,0,1);
+
         // Rotacion de jugadores
         this.carlos.body.fixedRotation = true;
         this.pity.body.fixedRotation = true;
