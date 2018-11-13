@@ -29,6 +29,10 @@ GamePlayManager = {
     create: function() {
         console.log("create");
 
+        //new Phaser.Rectangle(x0, y0,width,height);
+
+        game.world.setBounds(0, 0, 1024, 600);
+
         this.background = game.add.sprite(0, 0, 'background');
 
         //  Enable p2 physics
@@ -37,8 +41,10 @@ GamePlayManager = {
         game.physics.p2.gravity.y = 500;
 
         var spriteMaterial = game.physics.p2.createMaterial('spriteMaterial');
+        var playerMaterial = game.physics.p2.createMaterial('spriteMaterial');
         var worldMaterial = game.physics.p2.createMaterial('worldMaterial');
         var contactMaterial = game.physics.p2.createContactMaterial(spriteMaterial, worldMaterial, { restitution: 1.0 });
+        var contactMaterial2 = game.physics.p2.createContactMaterial(spriteMaterial, playerMaterial, { restitution: 1.0 });
 
         game.physics.p2.setWorldMaterial(worldMaterial);
 
@@ -52,8 +58,8 @@ GamePlayManager = {
         game.physics.p2.enable([ this.pity ]);
 
         this.pelota.body.setMaterial(spriteMaterial);
-        this.carlos.body.setMaterial(spriteMaterial);
-        this.pity.body.setMaterial(spriteMaterial);
+        this.carlos.body.setMaterial(playerMaterial);
+        this.pity.body.setMaterial(playerMaterial);
 
         //  Escala de gravedad
         this.pelota.body.data.gravityScale = 1,5;
