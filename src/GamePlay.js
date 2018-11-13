@@ -44,7 +44,7 @@ GamePlayManager = {
 
         this.carlos = game.add.sprite(100, 100, 'carlos');
         this.pity = game.add.sprite(800, 400, 'pity');
-        this.pelota = game.add.sprite(100, 400, 'pelota');
+        this.pelota = game.add.sprite(512, 200, 'pelota');
 
         //  Enable for physics. This creates a default rectangular body.
         game.physics.p2.enable([ this.pelota ]);
