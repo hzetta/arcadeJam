@@ -34,7 +34,7 @@ GamePlayManager = {
         //  Enable p2 physics
         game.physics.startSystem(Phaser.Physics.P2JS);
 
-        game.physics.p2.gravity.y = 300;
+        game.physics.p2.gravity.y = 500;
 
         var spriteMaterial = game.physics.p2.createMaterial('spriteMaterial');
         var worldMaterial = game.physics.p2.createMaterial('worldMaterial');
