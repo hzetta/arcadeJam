@@ -34,6 +34,7 @@ GamePlayManager = {
         //  Enable p2 physics
         game.physics.startSystem(Phaser.Physics.P2JS);
 
+        game.physics.p2.restitution = 0.5;
         game.physics.p2.gravity.y = 500;
 
         var spriteMaterial = game.physics.p2.createMaterial('spriteMaterial');
@@ -51,6 +52,10 @@ GamePlayManager = {
         game.physics.p2.enable([ this.carlos ]);
         game.physics.p2.enable([ this.pity ]);
 
+        // Para que no se roten los personajes.
+        this.carlos.body.fixedRotation = true;
+        this.pity.body.fixedRotation = true;
+        
         this.pelota.body.setMaterial(spriteMaterial);
         this.carlos.body.setMaterial(spriteMaterial);
         this.pity.body.setMaterial(spriteMaterial);
