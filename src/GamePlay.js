@@ -37,7 +37,7 @@ GamePlayManager = {
         //  Enable p2 physics
         game.physics.startSystem(Phaser.Physics.P2JS);
 
-        game.physics.p2.setImpactEvents(true);
+        //game.physics.p2.setImpactEvents(true);
 
         game.physics.p2.gravity.y = 500;
 
@@ -139,7 +139,7 @@ GamePlayManager = {
 }
 //constantes
 var TIME_BETWEEN_JUMPS = 650;    //tiempo en ms entre saltos
-var PLAYER_SPEED = 500;         //velocidad
+var PLAYER_SPEED = 300;         //velocidad
 var PLAYER_JUMP_SPEED = 1000;
 
 var game = new Phaser.Game(1024, 768, Phaser.CANVAS);
