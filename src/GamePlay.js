@@ -92,35 +92,35 @@ GamePlayManager = {
         this.carlos.body.velocity.x = 0;
         this.pity.body.velocity.x = 0;
 
-        // Controles Pity (JUGADOR 1)
+        // Controles Carlos (JUGADOR 1)
         if (this.aKey.isDown)
         {
-            this.pity.body.moveLeft(200);
+            this.carlos.body.moveLeft(200);
         }
         else if (this.dKey.isDown)
         {
-            this.pity.body.moveRight(200);
+            this.carlos.body.moveRight(200);
         }
         if (this.spaceKey.isDown)
         {
-            this.pity.body.moveUp(1200);
+            this.carlos.body.moveUp(1200);
         }
         if (this.cKey.isDown)
         {
         }
 
-        // Controles Carlos (JUGADOR 2)
+        // Controles Pity (JUGADOR 2)
         if (cursors.left.isDown)
         {
-            this.carlos.body.moveLeft(200);
+            this.pity.body.moveLeft(200);
         }
         else if (cursors.right.isDown)
         {
-            this.carlos.body.moveRight(200);
+            this.pity.body.moveRight(200);
         }
         if (this.nKey.isDown)
         {
-            this.carlos.body.moveUp(1200);
+            this.pity.body.moveUp(1200);
         }
         if (this.mKey.isDown)
         {
