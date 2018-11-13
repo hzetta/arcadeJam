@@ -29,8 +29,6 @@ GamePlayManager = {
     create: function() {
         console.log("create");
 
-        //new Phaser.Rectangle(x0, y0,width,height);
-
         game.world.setBounds(0, 0, 1024, 600);
 
         this.background = game.add.sprite(0, 0, 'background');
@@ -56,6 +54,10 @@ GamePlayManager = {
         game.physics.p2.enable([ this.pelota ]);
         game.physics.p2.enable([ this.carlos ]);
         game.physics.p2.enable([ this.pity ]);
+
+        // Rotacion de jugadores
+        this.carlos.body.fixedRotation = true;
+        this.pity.body.fixedRotation = true;
 
         this.pelota.body.setMaterial(spriteMaterial);
         this.carlos.body.setMaterial(playerMaterial);
