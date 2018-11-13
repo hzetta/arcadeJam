@@ -36,6 +36,8 @@ GamePlayManager = {
         //  Enable p2 physics
         game.physics.startSystem(Phaser.Physics.P2JS);
 
+        game.physics.p2.setImpactEvents(true);
+
         game.physics.p2.gravity.y = 500;
 
         var spriteMaterial = game.physics.p2.createMaterial('spriteMaterial');
@@ -68,7 +70,7 @@ GamePlayManager = {
         this.pity.body.setMaterial(playerMaterial);
 
         //  Escala de gravedad
-        this.pelota.body.data.gravityScale = 1,5;
+        this.pelota.body.data.gravityScale = 3;
         this.carlos.body.data.gravityScale = 9;
         this.pity.body.data.gravityScale = 9;
 
