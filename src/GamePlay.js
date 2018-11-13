@@ -19,6 +19,7 @@ GamePlayManager = {
         var mKey;
         var spaceKey;
         var cKey;
+		var carlosJumpTimer;
         game.load.image("background", "assets/images/background.png");
         game.load.image("pelota", "assets/images/pelota.png");
         game.load.image("carlos", "assets/images/carlos.png");
@@ -58,8 +59,8 @@ GamePlayManager = {
         game.physics.p2.enable([ this.pity ]);
 
         // Forma de pelota
-
         this.pelota.body.setCircle (25,0,0,1);
+		this.pelota.anchor.setTo(0.5, 0.5);
 
         // Rotacion de jugadores
         this.carlos.body.fixedRotation = true;
@@ -73,6 +74,10 @@ GamePlayManager = {
         this.pelota.body.data.gravityScale = 3;
         this.carlos.body.data.gravityScale = 9;
         this.pity.body.data.gravityScale = 9;
+
+
+        //Tiempo de saltos
+        this.carlosJumpTimer = game.time.now;
 
         // Movimiento Flechas
         cursors = game.input.keyboard.createCursorKeys();
@@ -89,7 +94,7 @@ GamePlayManager = {
     },
     //Frame a Frame.
     update: function() {
-        console.log("update");
+        //console.log("update");
         
         this.carlos.body.velocity.x = 0;
         this.pity.body.velocity.x = 0;
@@ -97,15 +102,17 @@ GamePlayManager = {
         // Controles Carlos (JUGADOR 1)
         if (this.aKey.isDown)
         {
-            this.carlos.body.moveLeft(200);
+            this.carlos.body.moveLeft(PLAYER_SPEED);
         }
         else if (this.dKey.isDown)
         {
-            this.carlos.body.moveRight(200);
+            this.carlos.body.moveRight(PLAYER_SPEED);
         }
-        if (this.spaceKey.isDown)
+        if (this.spaceKey.isDown && game.time.now > this.carlosJumpTimer)
         {
-            this.carlos.body.moveUp(1200);
+            console.log("salto carlos");
+            this.carlos.body.moveUp(PLAYER_JUMP_SPEED);
+			this.carlosJumpTimer = game.time.now + TIME_BETWEEN_JUMPS;
         }
         if (this.cKey.isDown)
         {
@@ -114,15 +121,15 @@ GamePlayManager = {
         // Controles Pity (JUGADOR 2)
         if (cursors.left.isDown)
         {
-            this.pity.body.moveLeft(200);
+            this.pity.body.moveLeft(PLAYER_SPEED);
         }
         else if (cursors.right.isDown)
         {
-            this.pity.body.moveRight(200);
+            this.pity.body.moveRight(PLAYER_SPEED);
         }
         if (this.nKey.isDown)
         {
-            this.pity.body.moveUp(1200);
+            this.pity.body.moveUp(PLAYER_JUMP_SPEED);
         }
         if (this.mKey.isDown)
         {
@@ -130,8 +137,12 @@ GamePlayManager = {
     
     },
 }
+//constantes
+var TIME_BETWEEN_JUMPS = 650;    //tiempo en ms entre saltos
+var PLAYER_SPEED = 500;         //velocidad
+var PLAYER_JUMP_SPEED = 1000;
 
 var game = new Phaser.Game(1024, 768, Phaser.CANVAS);
     
 game.state.add("gameplay", GamePlayManager);
-game.state.start("gameplay");
+game.state.start("gameplay")
