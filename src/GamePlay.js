@@ -78,9 +78,7 @@ GamePlayManager = {
         console.log("update");
         
         this.carlos.body.velocity.x = 0;
-        this.carlos.body.velocity.y = 500;
         this.pity.body.velocity.x = 0;
-        this.pity.body.velocity.y = 500;
 
         // Controles Pity (JUGADOR 1)
         if (this.aKey.isDown)
