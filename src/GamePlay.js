@@ -19,11 +19,14 @@ GamePlayManager = {
         var mKey;
         var spaceKey;
         var cKey;
-		var carlosJumpTimer;
+        var carlosJumpTimer;
+        var pityJumpTimer;
         game.load.image("background", "assets/images/background.png");
         game.load.image("pelota", "assets/images/pelota.png");
-        game.load.image("carlos", "assets/images/carlos.png");
-        game.load.image("pity", "assets/images/pity.png");
+        //game.load.image("carlos", "assets/images/carlos.png");
+        //game.load.image("pity", "assets/images/pity.png");
+        game.load.spritesheet('pity', 'assets/images/pity_movimiento.png', 105, 115, 9);
+        game.load.spritesheet('carlos', 'assets/images/carlos_movimiento.png', 105, 114, 9);
 
     },
     //create == start (unity).
@@ -49,8 +52,14 @@ GamePlayManager = {
 
         game.physics.p2.setWorldMaterial(worldMaterial);
 
-        this.carlos = game.add.sprite(150, 100, 'carlos');
-        this.pity = game.add.sprite(874, 100, 'pity');
+        this.carlos = game.add.sprite(150, 100, 'carlos', 1);
+        this.carlos.animations.add('walkright', [6], 12, false);
+        this.carlos.animations.add('walkleft', [8], 12, false);
+        this.carlos.animations.add('static', [0], 12, true);
+        this.pity = game.add.sprite(874, 100, 'pity', 1);
+        this.pity.animations.add('derecha', [6], 12, false);
+        this.pity.animations.add('izquierda', [8], 12, false);
+        this.pity.animations.add('estatico', [0], 12, true);
         this.pelota = game.add.sprite(512, 200, 'pelota');
 
         //  Enable for physics. This creates a default rectangular body.
@@ -78,6 +87,7 @@ GamePlayManager = {
 
         //Tiempo de saltos
         this.carlosJumpTimer = game.time.now;
+        this.pityJumpTimer = game.time.now;
 
         // Movimiento Flechas
         cursors = game.input.keyboard.createCursorKeys();
@@ -103,11 +113,18 @@ GamePlayManager = {
         if (this.aKey.isDown)
         {
             this.carlos.body.moveLeft(PLAYER_SPEED);
+            this.carlos.animations.play('walkleft');
         }
         else if (this.dKey.isDown)
         {
             this.carlos.body.moveRight(PLAYER_SPEED);
+            this.carlos.animations.play('walkright');   
         }
+        else 
+        {
+                this.carlos.animations.stop('walkright');
+                this.carlos.animations.play('static'); 
+            }        
         if (this.spaceKey.isDown && game.time.now > this.carlosJumpTimer)
         {
             console.log("salto carlos");
@@ -116,20 +133,31 @@ GamePlayManager = {
         }
         if (this.cKey.isDown)
         {
+
         }
 
         // Controles Pity (JUGADOR 2)
         if (cursors.left.isDown)
         {
             this.pity.body.moveLeft(PLAYER_SPEED);
+            this.pity.animations.play('izquierda');
         }
         else if (cursors.right.isDown)
         {
             this.pity.body.moveRight(PLAYER_SPEED);
+            this.pity.animations.play('derecha');   
         }
-        if (this.nKey.isDown)
+        else 
         {
+                this.pity.animations.stop('derecha');
+                this.pity.animations.play('estatico'); 
+            }
+    
+        if (this.nKey.isDown && game.time.now > this.pityJumpTimer)
+        {
+            console.log("salto carlos");
             this.pity.body.moveUp(PLAYER_JUMP_SPEED);
+			this.pityJumpTimer = game.time.now + TIME_BETWEEN_JUMPS;
         }
         if (this.mKey.isDown)
         {
