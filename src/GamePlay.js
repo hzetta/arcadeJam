@@ -38,8 +38,11 @@ GamePlayManager = {
         game.physics.p2.gravity.y = 500;
 
         var spriteMaterial = game.physics.p2.createMaterial('spriteMaterial');
+        var playerMaterial = game.physics.p2.createMaterial('spriteMaterial');
+        
         var worldMaterial = game.physics.p2.createMaterial('worldMaterial');
         var contactMaterial = game.physics.p2.createContactMaterial(spriteMaterial, worldMaterial, { restitution: 1.0 });
+        var contactMaterial2 = game.physics.p2.createContactMaterial(spriteMaterial, playerMaterial, { restitution: 1.0 });
 
         game.physics.p2.setWorldMaterial(worldMaterial);
 
@@ -57,8 +60,8 @@ GamePlayManager = {
         this.pity.body.fixedRotation = true;
         
         this.pelota.body.setMaterial(spriteMaterial);
-        this.carlos.body.setMaterial(spriteMaterial);
-        this.pity.body.setMaterial(spriteMaterial);
+        this.carlos.body.setMaterial(playerMaterial);
+        this.pity.body.setMaterial(playerMaterial);
 
         //  Escala de gravedad
         this.pelota.body.data.gravityScale = 1,5;
@@ -122,7 +125,7 @@ GamePlayManager = {
     },
 }
 
-var game = new Phaser.Game(1024, 768, Phaser.CANVAS);
+var game = new Phaser.Game(1024, 600, Phaser.CANVAS);
     
 game.state.add("gameplay", GamePlayManager);
 game.state.start("gameplay");
