@@ -105,7 +105,7 @@ GamePlayManager = {
         this.pity.animations.add('izquierda', [8], 12, false);
         this.pity.animations.add('estatico', [0], 12, true);
         this.pity.animations.add('patada', [4], 12, false);
-        this.pelota = game.add.sprite(50, 200, 'pelota');
+        this.pelota = game.add.sprite(512, 200, 'pelota');
         //this.paloder = game.add.sprite(1000, 299, 'paloder');
 
         this.carlosFondoArco = game.add.sprite(1,game.world.height - game.cache.getImage('fondoArco').height/2,'fondoArco');
@@ -425,7 +425,7 @@ StartManager = {
 
     update: function() {
         //console.log("update");
-        if (pad2.justPressed(Phaser.Gamepad.XBOX360_A)|| game.input.keyboard.isDown(Phaser.Keyboard.B)|| pad1.justPressed(Phaser.Gamepad.XBOX360_A)|| game.input.keyboard.isDown(Phaser.Keyboard.Z))
+        if (pad1.isDown(Phaser.Gamepad.XBOX360_RIGHT_BUMPER)|| game.input.keyboard.isDown(Phaser.Keyboard.B)|| pad2.isDown(Phaser.Gamepad.XBOX360_RIGHT_BUMPER)|| game.input.keyboard.isDown(Phaser.Keyboard.Z)|| pad2.isDown(Phaser.Gamepad.XBOX360_LEFT_BUMPER)|| pad1.isDown(Phaser.Gamepad.XBOX360_LEFT_BUMPER))
         {
             game.state.start("gameplay")
             this.musicstart.pause();
@@ -460,7 +460,7 @@ CreditsManager = {
 
     update: function() {
         //console.log("update");
-        if (pad2.justPressed(Phaser.Gamepad.XBOX360_A)|| game.input.keyboard.isDown(Phaser.Keyboard.B)|| pad1.justPressed(Phaser.Gamepad.XBOX360_A)|| game.input.keyboard.isDown(Phaser.Keyboard.Z))
+        if (pad1.isDown(Phaser.Gamepad.XBOX360_RIGHT_BUMPER)|| game.input.keyboard.isDown(Phaser.Keyboard.B)|| pad2.isDown(Phaser.Gamepad.XBOX360_RIGHT_BUMPER)|| game.input.keyboard.isDown(Phaser.Keyboard.Z)|| pad2.isDown(Phaser.Gamepad.XBOX360_LEFT_BUMPER)|| pad1.isDown(Phaser.Gamepad.XBOX360_LEFT_BUMPER))
         {
             game.state.start("start")
         }
