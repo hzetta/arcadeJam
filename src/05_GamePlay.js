@@ -112,7 +112,7 @@ GamePlayManager = {
         //this.paloder = game.add.sprite(1000, 299, 'paloder');
 
         this.carlosFondoArco = game.add.sprite(1,game.world.height - game.cache.getImage('fondoArco').height/2,'fondoArco');
-        this.pityFondoArco = game.add.sprite(1000,game.world.height - game.cache.getImage('fondoArco').height/2,'fondoArco');
+        this.pityFondoArco = game.add.sprite(1015,game.world.height - game.cache.getImage('fondoArco').height/2,'fondoArco');
 
         this.carlosTechoArco = game.add.sprite(1,game.world.height - game.cache.getImage('fondoArco').height-20,'techoArco');
         this.pityTechoArco = game.add.sprite(1023,game.world.height - game.cache.getImage('fondoArco').height-20,'techoArco');
