@@ -35,6 +35,8 @@ GamePlayManager = {
         var txtGolesCarlos;
         var txtGolesPity;
         var txtTimerPartido;
+        var copaPity;
+        var copaCarlos;
 
         //game.load.audio('music', ['assets/sonidos/fondoMusica.ogg']);
 
@@ -44,11 +46,14 @@ GamePlayManager = {
         game.load.image("background", "assets/images/background.png");
         game.load.spritesheet('gente', 'assets/images/animacion_gente.png', 272, 180, 4);
         game.load.image("pelota", "assets/images/pelota.png");
-        game.load.image("paloder", "assets/images/palo_der.png");
+        //game.load.image("paloder", "assets/images/palo_der.png");
         game.load.spritesheet('pity', 'assets/images/pity_movimiento.png', 105, 115, 9);
         game.load.spritesheet('carlos', 'assets/images/carlos_movimiento.png', 105, 114, 9);
         game.load.image("fondoArco", "assets/images/fondo_arco.png");
         game.load.image("techoArco", "assets/images/techo_arco.png");
+        game.load.image("copaPity", "assets/images/libertadores_river.png");
+        game.load.image("copaCarlos", "assets/images/libertadores_boca.png");
+
     },
     //create == start (unity).
     create: function() {
@@ -90,8 +95,8 @@ GamePlayManager = {
         this.pity.animations.add('izquierda', [8], 12, false);
         this.pity.animations.add('estatico', [0], 12, true);
         this.pity.animations.add('patada', [4], 12, false);
-        this.pelota = game.add.sprite(76, 200, 'pelota');
-        this.paloder = game.add.sprite(1000, 299, 'paloder');
+        this.pelota = game.add.sprite(512, 200, 'pelota');
+        //this.paloder = game.add.sprite(1000, 299, 'paloder');
 
         this.carlosFondoArco = game.add.sprite(1,game.world.height - game.cache.getImage('fondoArco').height/2,'fondoArco');
         this.pityFondoArco = game.add.sprite(1000,game.world.height - game.cache.getImage('fondoArco').height/2,'fondoArco');
@@ -190,6 +195,10 @@ GamePlayManager = {
         this.pityFondoArco.body.createBodyCallback(this.pelota, this.goalFun, this);
         this.carlosFondoArco.body.createBodyCallback(this.pelota, this.goalFun, this);
 
+        this.pityTechoArco.body.createBodyCallback(this.pelota, this.techoFun, this);
+        this.carlosTechoArco.body.createBodyCallback(this.pelota, this.techoFun, this);
+
+
         //  And before this will happen, we need to turn on impact events for the world
         game.physics.p2.setImpactEvents(true);
 
@@ -225,6 +234,11 @@ GamePlayManager = {
             this.txtGolesCarlos.setText(this.golesCarlos);
         }
         this.reinicioGol();
+        this.checkFinal();
+    },
+
+    techoFun: function(b1,b2) {
+        //sonido travesanio
     },
 
     reinicioGol: function(){
@@ -247,6 +261,30 @@ GamePlayManager = {
         //console.log(Math.round((this.timerPartido.ms / 1000) % 60));
         
         this.txtTimerPartido.setText(minute + ":" + second);
+        this.checkFinal();
+    },
+
+    checkFinal: function() {
+        if (this.golesCarlos == MAX_GOLES || this.golesPity == MAX_GOLES || this.timerPartido.ms > MAX_TIMER_PARTIDO){
+            console.log("fin");
+            this.timerPartido.stop();
+
+            if (this.golesCarlos > this.golesPity){
+                this.copaCarlos = game.add.sprite(512, 356, 'copaCarlos');
+                this.copaCarlos.anchor.setTo(.5);
+                //sonido boca
+            } else if (this.golesCarlos < this.golesPity){
+                this.copaPity = game.add.sprite(512, 356, 'copaPity');
+                this.copaPity.anchor.setTo(.5);
+                //sonido river
+            } else {
+                //sonido buu
+
+            }
+            this.pelota.kill();
+            game.time.events.add(5000, function(){console.log("laconcha");game.state.start("credits");},this);
+                        
+        }
     },
 
     //Frame a Frame.
@@ -328,6 +366,8 @@ GamePlayManager = {
 var TIME_BETWEEN_JUMPS = 650;    //tiempo en ms entre saltos
 var PLAYER_SPEED = 300;         //velocidad
 var PLAYER_JUMP_SPEED = 1000;
+var MAX_GOLES = 5;
+var MAX_TIMER_PARTIDO = 90000;          //tiempo en ms de partido
 
 var game = new Phaser.Game(1024, 768, Phaser.CANVAS);
 
