@@ -20,6 +20,7 @@ GamePlayManager = {
         var indicator1;
         var indicator2;
         var music;
+        var saltoAudio;
         var paloder;
 
         var carlosFondoArco;
@@ -30,7 +31,8 @@ GamePlayManager = {
         var golesPity = 0;
         //game.load.audio('music', ['assets/sonidos/fondoMusica.ogg']);
 
-        game.load.audio('music', [{uri: "data:<opus_resource>", type: 'ogg'}, 'assets/sonidos/fondoMusica.ogg'], true)
+        game.load.audio('music', ['assets/sonidos/fondoMusica.ogg', 'assets/sonidos/fondoMusica.mp3'])
+        game.load.audio('saltoAudio', ['assets/sonidos/saltoAudio.ogg', 'assets/sonidos/saltoAudio.mp3'])
         game.load.spritesheet('controller-indicator', 'assets/images/diamonds.png', 81,84,4);
         game.load.image("background", "assets/images/background.png");
         game.load.spritesheet('gente', 'assets/images/animacion_gente.png', 272, 180, 4);
@@ -150,6 +152,13 @@ GamePlayManager = {
         //  And before this will happen, we need to turn on impact events for the world
         game.physics.p2.setImpactEvents(true);
 
+        // Musica
+        this.music = game.add.audio('music');
+        this.music.loop = true;
+        this.music.play();
+        this.audioSalto.loop = false;
+        this.audioSalto = game.add.audio('audioSalto');
+
     },
 
     goalFun: function(body1, body2) {
@@ -212,7 +221,7 @@ GamePlayManager = {
             this.carlos.body.moveRight(PLAYER_SPEED);
             this.carlos.animations.play('walkright');   
         }
-        else if (pad1.justPressed(Phaser.Gamepad.XBOX360_STICK_LEFT_X) || game.input.keyboard.isDown(Phaser.Keyboard.C))
+        else if (pad1.justPressed(Phaser.Gamepad.XBOX360_STICK_RIGHT_X) || game.input.keyboard.isDown(Phaser.Keyboard.C))
         {
             this.carlos.animations.play('kick');
         }
@@ -220,11 +229,11 @@ GamePlayManager = {
         {
                 this.carlos.animations.play('static'); 
             }        
-        if (pad1.justPressed(Phaser.Gamepad.XBOX360_STICK_RIGHT_Y) && game.time.now > this.carlosJumpTimer)//|| game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)
+        if (pad1.justPressed(Phaser.Gamepad.XBOX360_STICK_LEFT_Y) && game.time.now > this.carlosJumpTimer)//|| game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)
         {
             console.log("salto carlos");
             this.carlos.body.moveUp(PLAYER_JUMP_SPEED);
-			this.carlosJumpTimer = game.time.now + TIME_BETWEEN_JUMPS;
+            this.carlosJumpTimer = game.time.now + TIME_BETWEEN_JUMPS;
         }
 
         // Controles Pity (JUGADOR 2)
@@ -251,7 +260,7 @@ GamePlayManager = {
         {
             console.log("salto pity");
             this.pity.body.moveUp(PLAYER_JUMP_SPEED);
-			this.pityJumpTimer = game.time.now + TIME_BETWEEN_JUMPS;
+            this.pityJumpTimer = game.time.now + TIME_BETWEEN_JUMPS;
         }
     
     },
