@@ -286,7 +286,7 @@ GamePlayManager = {
 
     checkFinal: function() {
         if (this.golesCarlos == MAX_GOLES || this.golesPity == MAX_GOLES || this.timerPartido.ms > MAX_TIMER_PARTIDO){
-            console.log("fin");
+            //console.log("fin");
             this.timerPartido.stop();
 
             if (this.golesCarlos > this.golesPity){
@@ -305,7 +305,7 @@ GamePlayManager = {
 
             }
             this.pelota.kill();
-            game.time.events.add(7500, function(){console.log("cabeza de chota");this.ganadorRiver.pause();this.ganadorBoca.pause();this.empateAudio.pause();game.state.start("credits");},this);
+            game.time.events.add(7500, function(){/*console.log("cabeza de chota");*/this.ganadorRiver.pause();this.ganadorBoca.pause();this.empateAudio.pause();game.state.start("credits");},this);
             this.music.pause();
                         
         }
@@ -352,7 +352,7 @@ GamePlayManager = {
             }        
         if ((pad1.justPressed(Phaser.Gamepad.XBOX360_STICK_LEFT_Y) || game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) && game.time.now > this.carlosJumpTimer)
         {
-            console.log("salto carlos");
+            //console.log("salto carlos");
             this.carlos.body.moveUp(PLAYER_JUMP_SPEED);
             this.carlosJumpTimer = game.time.now + TIME_BETWEEN_JUMPS;
         }
@@ -379,7 +379,7 @@ GamePlayManager = {
     
         if ((pad2.isDown(Phaser.Gamepad.XBOX360_STICK_LEFT_Y) || game.input.keyboard.isDown(Phaser.Keyboard.N)) && game.time.now > this.pityJumpTimer)
         {
-            console.log("salto pity");
+            //console.log("salto pity");
             this.pity.body.moveUp(PLAYER_JUMP_SPEED);
             this.pityJumpTimer = game.time.now + TIME_BETWEEN_JUMPS;
         }
@@ -395,7 +395,7 @@ var TIME_BETWEEN_JUMPS = 450;    //tiempo en ms entre saltos
 var PLAYER_SPEED = 300;         //velocidad
 var PLAYER_JUMP_SPEED = 1000;
 var MAX_GOLES = 5;
-var MAX_TIMER_PARTIDO = 90000;          //tiempo en ms de partido
+var MAX_TIMER_PARTIDO = 60000;          //tiempo en ms de partido
 var PLAYER_START_Y = 350;
 
 var game = new Phaser.Game(1024, 768, Phaser.CANVAS);
