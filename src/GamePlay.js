@@ -91,16 +91,19 @@ GamePlayManager = {
         var playerMaterial = game.physics.p2.createMaterial('spriteMaterial');
         var worldMaterial = game.physics.p2.createMaterial('worldMaterial');
         var contactMaterial = game.physics.p2.createContactMaterial(spriteMaterial, worldMaterial, { restitution: 1.0 });
-        var contactMaterial2 = game.physics.p2.createContactMaterial(spriteMaterial, playerMaterial, { restitution: 1.0 });
+        var contactMaterial2 = game.physics.p2.createContactMaterial(spriteMaterial, playerMaterial, { restitution: 1.1 });
+        // contactMaterial2.restitution = 1.1;
+        // contactMaterial2.friction = 0;
+        // contactMaterial2.stiffness = 1000;
 
         game.physics.p2.setWorldMaterial(worldMaterial);
 
-        this.carlos = game.add.sprite(150, 100, 'carlos', 1);
+        this.carlos = game.add.sprite(150, PLAYER_START_Y, 'carlos', 1);
         this.carlos.animations.add('walkright', [6], 12, false);
         this.carlos.animations.add('walkleft', [8], 12, false);
         this.carlos.animations.add('static', [0], 12, true);
         this.carlos.animations.add('kick', [4], 12, false);
-        this.pity = game.add.sprite(874, 100, 'pity', 1);
+        this.pity = game.add.sprite(874, PLAYER_START_Y, 'pity', 1);
         this.pity.animations.add('derecha', [6], 12, false);
         this.pity.animations.add('izquierda', [8], 12, false);
         this.pity.animations.add('estatico', [0], 12, true);
@@ -112,7 +115,7 @@ GamePlayManager = {
         this.pityFondoArco = game.add.sprite(1000,game.world.height - game.cache.getImage('fondoArco').height/2,'fondoArco');
 
         this.carlosTechoArco = game.add.sprite(1,game.world.height - game.cache.getImage('fondoArco').height-20,'techoArco');
-        this.pityTechoArco = game.add.sprite(1000,game.world.height - game.cache.getImage('fondoArco').height-20,'techoArco');
+        this.pityTechoArco = game.add.sprite(1023,game.world.height - game.cache.getImage('fondoArco').height-20,'techoArco');
 
 
         this.txtGolesCarlos = game.add.text(320, 690, this.golesCarlos, {
@@ -176,12 +179,13 @@ GamePlayManager = {
 
         //  Escala de gravedad
         this.pelota.body.data.gravityScale = 3;
+        //this.pelota.body.data.mass = 2.1;
         this.carlos.body.data.gravityScale = 9;
         this.pity.body.data.gravityScale = 9;
 
         // Tiempo de saltos
-        this.carlosJumpTimer = game.time.now;
-        this.pityJumpTimer = game.time.now;
+        this.carlosJumpTimer = game.time.now + TIME_BETWEEN_JUMPS;
+        this.pityJumpTimer = game.time.now + TIME_BETWEEN_JUMPS;
 
         // Gente
         //genteFondo = game.add.sprite(0,0, 'gente');
@@ -232,7 +236,7 @@ GamePlayManager = {
 
     goalFun: function(body1, body2) {
         if (body1.id == this.carlosFondoArco.body.id){
-            console.log("Gol pity");
+            //console.log("Gol pity");
             this.golesPity += 1;
             this.txtGolesPity.setText(this.golesPity);
             this.golAudio.loop = false;
@@ -240,7 +244,7 @@ GamePlayManager = {
             this.golAudio.play();
         }
         else {
-            console.log("Gol carlos");
+            //console.log("Gol carlos");
             this.golesCarlos += 1;
             this.txtGolesCarlos.setText(this.golesCarlos);
             this.golAudio.loop = false;
@@ -258,8 +262,8 @@ GamePlayManager = {
     },
 
     reinicioGol: function(){
-        this.carlos.reset(150, 100);
-        this.pity.reset(874, 100);
+        this.carlos.reset(150, PLAYER_START_Y);
+        this.pity.reset(874, PLAYER_START_Y);
         this.pelota.reset(512,200);
     },
 
@@ -379,15 +383,20 @@ GamePlayManager = {
             this.pity.body.moveUp(PLAYER_JUMP_SPEED);
             this.pityJumpTimer = game.time.now + TIME_BETWEEN_JUMPS;
         }
+        // console.log(this.pelota.body.velocity.y);
+        // if (Math.abs(this.pelota.body.velocity.y) <= PLAYER_SPEED / 2){
+        //     console.log("lento");
+        // }
     
     },
 }
 //constantes
-var TIME_BETWEEN_JUMPS = 650;    //tiempo en ms entre saltos
+var TIME_BETWEEN_JUMPS = 450;    //tiempo en ms entre saltos
 var PLAYER_SPEED = 300;         //velocidad
 var PLAYER_JUMP_SPEED = 1000;
 var MAX_GOLES = 5;
-var MAX_TIMER_PARTIDO = 60000;          //tiempo en ms de partido
+var MAX_TIMER_PARTIDO = 90000;          //tiempo en ms de partido
+var PLAYER_START_Y = 350;
 
 var game = new Phaser.Game(1024, 768, Phaser.CANVAS);
 
@@ -471,4 +480,4 @@ CreditsManager = {
 game.state.add("gameplay", GamePlayManager);
 game.state.add("start", StartManager);
 game.state.add("credits", CreditsManager);
-game.state.start("start")
+game.state.start("start");
