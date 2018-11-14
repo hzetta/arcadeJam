@@ -202,12 +202,12 @@ GamePlayManager = {
         this.timerPartido.start();
 
 
-        // // Musica
-        // this.music = game.add.audio('music');
-        // this.music.loop = true;
-        // this.music.play();
-        // this.audioSalto.loop = false;
-        // this.audioSalto = game.add.audio('audioSalto');
+        // Musica
+         this.music = game.add.audio('music');
+         this.music.loop = true;
+         this.music.play();
+         this.audioSalto.loop = false;
+         this.audioSalto = game.add.audio('audioSalto');
 
 
 
@@ -330,6 +330,85 @@ var PLAYER_SPEED = 300;         //velocidad
 var PLAYER_JUMP_SPEED = 1000;
 
 var game = new Phaser.Game(1024, 768, Phaser.CANVAS);
+
+StartManager = {
+
+    preload: function() {
+        console.log("preload");
+        var pantallamenu;
+        var background;
+        var pad1;
+        var pad2;
+        var indicator1;
+        var indicator2;
+        var musicstart;
+        game.load.image("background", "assets/images/background.png");
+        game.load.image("pantallamenu", "assets/images/pantallamenu.png");
+        game.load.audio('musicstart', ['assets/sonidos/inicio.ogg', 'assets/sonidos/inicio.mp3'])
+    },
+
+    create: function() {
+        console.log("create");
+        // Musica
+        this.background = game.add.sprite(0, 0, 'background');
+        this.pantallamenu = game.add.sprite(0, 0, 'pantallamenu');
+        this.musicstart = game.add.audio('musicstart');
+        this.musicstart.loop = true;
+        this.musicstart.play();
+
+        // Inicio de gamepad/controles.
+
+        game.input.gamepad.start();
+        pad1 = game.input.gamepad.pad1;
+        pad2 = game.input.gamepad.pad2;
+    },
+
+    update: function() {
+        //console.log("update");
+        if (game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR))
+        {
+            game.state.start("gameplay")
+            this.musicstart.pause();
+        }
+    },
+
+}
+
+CreditsManager = {
+
+    preload: function() {
+        console.log("preload");
+        var pantallacreditos;
+        var background;
+        var pad1;
+        var pad2;
+        game.load.image("background", "assets/images/background.png");
+        game.load.image("pantallacreditos", "assets/images/pantallacreditos.png");
+    },
+
+    create: function() {
+        console.log("create");
+        this.background = game.add.sprite(0, 0, 'background');
+        this.pantallamenu = game.add.sprite(0, 0, 'pantallacreditos');
+
+        // Inicio de gamepad/controles.
+
+        game.input.gamepad.start();
+        pad1 = game.input.gamepad.pad1;
+        pad2 = game.input.gamepad.pad2;
+    },
+
+    update: function() {
+        //console.log("update");
+        if (game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR))
+        {
+            game.state.start("start")
+        }
+    },
+
+}
     
 game.state.add("gameplay", GamePlayManager);
-game.state.start("gameplay")
+game.state.add("start", StartManager);
+game.state.add("credits", CreditsManager);
+game.state.start("start")
