@@ -354,17 +354,17 @@ GamePlayManager = {
         }
 
         // Controles Pity (JUGADOR 2)
-        if (pad2.isDown(Phaser.Gamepad.XBOX360_RIGHT_BUMPER))//|| game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
+        if (pad2.isDown(Phaser.Gamepad.XBOX360_RIGHT_BUMPER)| game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
         {
             this.pity.body.moveLeft(PLAYER_SPEED);
             this.pity.animations.play('izquierda');
         }
-        else if (pad2.isDown(Phaser.Gamepad.XBOX360_LEFT_BUMPER))//|| game.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
+        else if (pad2.isDown(Phaser.Gamepad.XBOX360_LEFT_BUMPER)|| game.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
         {
             this.pity.body.moveRight(PLAYER_SPEED);
             this.pity.animations.play('derecha');   
         }
-        else if (pad2.justPressed(Phaser.Gamepad.XBOX360_STICK_RIGHT_X))//|| game.input.keyboard.isDown(Phaser.Keyboard.M))
+        else if (pad2.justPressed(Phaser.Gamepad.XBOX360_STICK_RIGHT_X) || game.input.keyboard.isDown(Phaser.Keyboard.M))
         {
             this.pity.animations.play('patada');
         }
@@ -373,7 +373,7 @@ GamePlayManager = {
                 this.pity.animations.play('estatico'); 
             }
     
-        if (pad2.isDown(Phaser.Gamepad.XBOX360_STICK_LEFT_Y) && game.time.now > this.pityJumpTimer)
+        if ((pad2.isDown(Phaser.Gamepad.XBOX360_STICK_LEFT_Y) || game.input.keyboard.isDown(Phaser.Keyboard.N)) && game.time.now > this.pityJumpTimer)
         {
             console.log("salto pity");
             this.pity.body.moveUp(PLAYER_JUMP_SPEED);
@@ -425,7 +425,7 @@ StartManager = {
 
     update: function() {
         //console.log("update");
-        if (game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR))
+        if (pad2.justPressed(Phaser.Gamepad.XBOX360_A)|| game.input.keyboard.isDown(Phaser.Keyboard.B)|| pad1.justPressed(Phaser.Gamepad.XBOX360_A)|| game.input.keyboard.isDown(Phaser.Keyboard.Z))
         {
             game.state.start("gameplay")
             this.musicstart.pause();
@@ -460,7 +460,7 @@ CreditsManager = {
 
     update: function() {
         //console.log("update");
-        if (game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR))
+        if (pad2.justPressed(Phaser.Gamepad.XBOX360_A)|| game.input.keyboard.isDown(Phaser.Keyboard.B)|| pad1.justPressed(Phaser.Gamepad.XBOX360_A)|| game.input.keyboard.isDown(Phaser.Keyboard.Z))
         {
             game.state.start("start")
         }
