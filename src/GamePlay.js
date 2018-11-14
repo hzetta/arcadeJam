@@ -21,6 +21,13 @@ GamePlayManager = {
         var indicator2;
         var music;
         var paloder;
+
+        var carlosFondoArco;
+        var pityFondoArco;
+
+
+        var golesCarlos = 0;
+        var golesPity = 0;
         //game.load.audio('music', ['assets/sonidos/fondoMusica.ogg']);
 
         game.load.audio('music', [{uri: "data:<opus_resource>", type: 'ogg'}, 'assets/sonidos/fondoMusica.ogg'], true)
@@ -31,14 +38,15 @@ GamePlayManager = {
         game.load.image("paloder", "assets/images/palo_der.png");
         game.load.spritesheet('pity', 'assets/images/pity_movimiento.png', 105, 115, 9);
         game.load.spritesheet('carlos', 'assets/images/carlos_movimiento.png', 105, 114, 9);
+        game.load.image("fondoArco", "assets/images/fondo_arco.png");
 
     },
     //create == start (unity).
     create: function() {
         console.log("create");
 
-        this.music = game.add.audio('music');
-        this.music.play('music');
+        //this.music = game.add.audio('music');
+        //this.music.play('music');
 
         game.world.setBounds(0, 0, 1024, 600);
 
@@ -70,13 +78,18 @@ GamePlayManager = {
         this.pity.animations.add('estatico', [0], 12, true);
         this.pity.animations.add('patada', [4], 12, false);
         this.pelota = game.add.sprite(512, 200, 'pelota');
-        this.paloder = game.add.sprite(1000, 599, 'paloder');
+        this.paloder = game.add.sprite(1000, 299, 'paloder');
+
+        this.carlosFondoArco = game.add.sprite(1,game.world.height - game.cache.getImage('fondoArco').height/2,'fondoArco');
+        this.pityFondoArco = game.add.sprite(1000,game.world.height - game.cache.getImage('fondoArco').height/2,'fondoArco');
 
         //  Enable for physics. This creates a default rectangular body.
         game.physics.p2.enable([ this.pelota ]);
         game.physics.p2.enable([ this.carlos ]);
         game.physics.p2.enable([ this.pity ]);
-        game.physics.p2.enable([ this.paloder ]);
+        //game.physics.p2.enable([ this.paloder ]);
+        game.physics.p2.enable([ this.pityFondoArco ]);
+        game.physics.p2.enable([ this.carlosFondoArco ]);
 
         // Forma de pelota
         this.pelota.body.setCircle (24,0,0,1);
@@ -89,14 +102,19 @@ GamePlayManager = {
         // Rotacion de jugadores
         this.carlos.body.fixedRotation = true;
         this.pity.body.fixedRotation = true;
-        this.paloder.body.fixedRotation = true;
-        this.paloder.body.static = true;
+        //this.paloder.body.fixedRotation = true;
+        //this.paloder.body.static = true;
+
+        this.pityFondoArco.body.static = true;
+        this.carlosFondoArco.body.static = true;
 
         // Seteo de materiales para jugadores y pelota
         this.pelota.body.setMaterial(spriteMaterial);
         this.carlos.body.setMaterial(playerMaterial);
         this.pity.body.setMaterial(playerMaterial);
-        this.paloder.body.setMaterial(playerMaterial);
+        //this.paloder.body.setMaterial(playerMaterial);
+        this.pityFondoArco.body.setMaterial(playerMaterial);
+        this.carlosFondoArco.body.setMaterial(playerMaterial);
 
         //  Escala de gravedad
         this.pelota.body.data.gravityScale = 3;
@@ -125,7 +143,9 @@ GamePlayManager = {
         pad1 = game.input.gamepad.pad1;
         pad2 = game.input.gamepad.pad2;
 
-        this.paloder.body.createBodyCallback(this.pelota, this.goalFun, this);
+        //this.paloder.body.createBodyCallback(this.pelota, this.goalFun, this);
+        this.pityFondoArco.body.createBodyCallback(this.pelota, this.goalFun, this);
+        this.carlosFondoArco.body.createBodyCallback(this.pelota, this.goalFun, this);
 
         //  And before this will happen, we need to turn on impact events for the world
         game.physics.p2.setImpactEvents(true);
@@ -137,8 +157,30 @@ GamePlayManager = {
         //  body1 is the space ship (as it's the body that owns the callback)
         //  body2 is the body it impacted with, in this case our panda
         //  As body2 is a Phaser.Physics.P2.Body object, you access its owner (the sprite) via the sprite property:
-        console.log("Gol");
+        console.log(body1.id);
+        console.log(body2.id);
+        console.log(this.carlosFondoArco.body.id);
+        console.log(this.pityFondoArco.body.id);
+        console.log(this.pelota.body.id);
+
+
+        if (body1.id == this.carlosFondoArco.body.id){
+            console.log("Gol pity");
+            this.golesPity += 1;
+        }
+        else {
+            console.log("Gol carlos");
+            this.golesCarlos += 1;
+        }
+        this.reinicioGol();
     },
+
+    reinicioGol: function(){
+        this.carlos.reset(150, 100);
+        this.pity.reset(874, 100);
+        this.pelota.reset(512,200);
+    },
+
     //Frame a Frame.
     update: function() {
         //console.log("update");
