@@ -41,7 +41,11 @@ GamePlayManager = {
         //game.load.audio('music', ['assets/sonidos/fondoMusica.ogg']);
 
         game.load.audio('music', ['assets/sonidos/fondoMusica.ogg', 'assets/sonidos/fondoMusica.mp3'])
-        game.load.audio('saltoAudio', ['assets/sonidos/saltoAudio.ogg', 'assets/sonidos/saltoAudio.mp3'])
+        game.load.audio('travesanioAudio', ['assets/sonidos/travesanio.ogg', 'assets/sonidos/travesanio.mp3'])
+        game.load.audio('golAudio', ['assets/sonidos/gol.ogg', 'assets/sonidos/gol.mp3'])
+        game.load.audio('ganadorBoca', ['assets/sonidos/hinchadaboca.ogg', 'assets/sonidos/hinchadaboca.mp3'])
+        game.load.audio('ganadorRiver', ['assets/sonidos/hinchadariver.ogg', 'assets/sonidos/hinchadariver.mp3'])
+        game.load.audio('empateAudio', ['assets/sonidos/empate.ogg', 'assets/sonidos/empate.mp3'])
         game.load.spritesheet('controller-indicator', 'assets/images/diamonds.png', 81,84,4);
         game.load.image("background", "assets/images/background.png");
         game.load.spritesheet('gente', 'assets/images/animacion_gente.png', 272, 180, 4);
@@ -72,6 +76,12 @@ GamePlayManager = {
         //game.physics.p2.setImpactEvents(true);
 
         //inicializaciones
+        this.golAudio = game.add.audio('golAudio');
+        this.travesanioAudio = game.add.audio('travesanioAudio');
+        this.ganadorBoca = game.add.audio('ganadorBoca');
+        this.ganadorRiver = game.add.audio('ganadorRiver');
+        this.empateAudio = game.add.audio('empateAudio');
+
         this.golesCarlos = 0;
         this.golesPity = 0;
         this.timerPartido = 0;
@@ -95,7 +105,7 @@ GamePlayManager = {
         this.pity.animations.add('izquierda', [8], 12, false);
         this.pity.animations.add('estatico', [0], 12, true);
         this.pity.animations.add('patada', [4], 12, false);
-        this.pelota = game.add.sprite(512, 200, 'pelota');
+        this.pelota = game.add.sprite(50, 200, 'pelota');
         //this.paloder = game.add.sprite(1000, 299, 'paloder');
 
         this.carlosFondoArco = game.add.sprite(1,game.world.height - game.cache.getImage('fondoArco').height/2,'fondoArco');
@@ -215,8 +225,6 @@ GamePlayManager = {
          this.music = game.add.audio('music');
          this.music.loop = true;
          this.music.play();
-         this.audioSalto.loop = false;
-         this.audioSalto = game.add.audio('audioSalto');
 
 
 
@@ -227,18 +235,26 @@ GamePlayManager = {
             console.log("Gol pity");
             this.golesPity += 1;
             this.txtGolesPity.setText(this.golesPity);
+            this.golAudio.loop = false;
+            this.golAudio.pause();
+            this.golAudio.play();
         }
         else {
             console.log("Gol carlos");
             this.golesCarlos += 1;
             this.txtGolesCarlos.setText(this.golesCarlos);
+            this.golAudio.loop = false;
+            this.golAudio.pause();
+            this.golAudio.play();
         }
         this.reinicioGol();
         this.checkFinal();
     },
 
     techoFun: function(b1,b2) {
-        //sonido travesanio
+        this.travesanioAudio.loop = false;
+        this.travesanioAudio.pause();
+        this.travesanioAudio.play();
     },
 
     reinicioGol: function(){
@@ -272,17 +288,21 @@ GamePlayManager = {
             if (this.golesCarlos > this.golesPity){
                 this.copaCarlos = game.add.sprite(512, 356, 'copaCarlos');
                 this.copaCarlos.anchor.setTo(.5);
-                //sonido boca
+                this.ganadorBoca.loop = false;
+                this.ganadorBoca.play();
             } else if (this.golesCarlos < this.golesPity){
                 this.copaPity = game.add.sprite(512, 356, 'copaPity');
                 this.copaPity.anchor.setTo(.5);
-                //sonido river
+                this.ganadorRiver.loop = false;
+                this.ganadorRiver.play();
             } else {
-                //sonido buu
+                this.empateAudio.loop = false;
+                this.empateAudio.play();
 
             }
             this.pelota.kill();
-            game.time.events.add(5000, function(){console.log("laconcha");game.state.start("credits");},this);
+            game.time.events.add(7500, function(){console.log("cabeza de chota");this.ganadorRiver.pause();this.ganadorBoca.pause();this.empateAudio.pause();game.state.start("credits");},this);
+            this.music.pause();
                         
         }
     },
@@ -367,7 +387,7 @@ var TIME_BETWEEN_JUMPS = 650;    //tiempo en ms entre saltos
 var PLAYER_SPEED = 300;         //velocidad
 var PLAYER_JUMP_SPEED = 1000;
 var MAX_GOLES = 5;
-var MAX_TIMER_PARTIDO = 90000;          //tiempo en ms de partido
+var MAX_TIMER_PARTIDO = 60000;          //tiempo en ms de partido
 
 var game = new Phaser.Game(1024, 768, Phaser.CANVAS);
 
