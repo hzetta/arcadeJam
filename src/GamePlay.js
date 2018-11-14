@@ -21,6 +21,8 @@ GamePlayManager = {
         var cKey;
         var carlosJumpTimer;
         var pityJumpTimer;
+        var pad1;
+        var pad2;
         game.load.image("background", "assets/images/background.png");
         game.load.image("pelota", "assets/images/pelota.png");
         //game.load.image("carlos", "assets/images/carlos.png");
@@ -93,29 +95,33 @@ GamePlayManager = {
         cursors = game.input.keyboard.createCursorKeys();
 
         //  Registro de letras.
-        this.aKey = game.input.keyboard.addKey(Phaser.Keyboard.A);
-        this.dKey = game.input.keyboard.addKey(Phaser.Keyboard.D);
-        this.wKey = game.input.keyboard.addKey(Phaser.Keyboard.W);
-        this.nKey = game.input.keyboard.addKey(Phaser.Keyboard.N);
-        this.mKey = game.input.keyboard.addKey(Phaser.Keyboard.M);
-        this.cKey = game.input.keyboard.addKey(Phaser.Keyboard.C);
-        this.spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+        // this.aKey = game.input.keyboard.addKey(Phaser.Keyboard.A);
+        //this.dKey = game.input.keyboard.addKey(Phaser.Keyboard.D);
+        //this.wKey = game.input.keyboard.addKey(Phaser.Keyboard.W);
+        //this.nKey = game.input.keyboard.addKey(Phaser.Keyboard.N);
+        //this.mKey = game.input.keyboard.addKey(Phaser.Keyboard.M);
+        //this.cKey = game.input.keyboard.addKey(Phaser.Keyboard.C);
+        //this.spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+        game.input.gamepad.start();
+
+        pad1 = game.input.gamepad.pad2;
+        pad2 = game.input.gamepad.pad1;
 
     },
     //Frame a Frame.
     update: function() {
         //console.log("update");
-        
+
         this.carlos.body.velocity.x = 0;
         this.pity.body.velocity.x = 0;
 
         // Controles Carlos (JUGADOR 1)
-        if (this.aKey.isDown)
+        if (pad1.isDown(Phaser.Gamepad.XBOX360_RIGHT_BUMPER) || game.input.keyboard.isDown(Phaser.Keyboard.A))
         {
             this.carlos.body.moveLeft(PLAYER_SPEED);
             this.carlos.animations.play('walkleft');
         }
-        else if (this.dKey.isDown)
+        else if (pad1.isDown(Phaser.Gamepad.XBOX360_LEFT_BUMPER)|| game.input.keyboard.isDown(Phaser.Keyboard.D))
         {
             this.carlos.body.moveRight(PLAYER_SPEED);
             this.carlos.animations.play('walkright');   
@@ -125,24 +131,24 @@ GamePlayManager = {
                 this.carlos.animations.stop('walkright');
                 this.carlos.animations.play('static'); 
             }        
-        if (this.spaceKey.isDown && game.time.now > this.carlosJumpTimer)
+        if (pad1.justPressed(Phaser.Gamepad.XBOX360_STICK_RIGHT_X)|| game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR) && game.time.now > this.carlosJumpTimer)
         {
             console.log("salto carlos");
             this.carlos.body.moveUp(PLAYER_JUMP_SPEED);
 			this.carlosJumpTimer = game.time.now + TIME_BETWEEN_JUMPS;
         }
-        if (this.cKey.isDown)
+        if (pad1.justPressed(Phaser.Gamepad.XBOX360_STICK_LEFT_Y) || game.input.keyboard.isDown(Phaser.Keyboard.C))
         {
 
         }
 
         // Controles Pity (JUGADOR 2)
-        if (cursors.left.isDown)
+        if (pad2.isDown(Phaser.Gamepad.XBOX360_RIGHT_BUMPER)|| game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
         {
             this.pity.body.moveLeft(PLAYER_SPEED);
             this.pity.animations.play('izquierda');
         }
-        else if (cursors.right.isDown)
+        else if (pad2.isDown(Phaser.Gamepad.XBOX360_LEFT_BUMPER)|| game.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
         {
             this.pity.body.moveRight(PLAYER_SPEED);
             this.pity.animations.play('derecha');   
@@ -153,13 +159,13 @@ GamePlayManager = {
                 this.pity.animations.play('estatico'); 
             }
     
-        if (this.nKey.isDown && game.time.now > this.pityJumpTimer)
+        if (pad2.justPressed(Phaser.Gamepad.XBOX360_STICK_LEFT_Y)|| game.input.keyboard.isDown(Phaser.Keyboard.N) && game.time.now > this.pityJumpTimer)
         {
             console.log("salto carlos");
             this.pity.body.moveUp(PLAYER_JUMP_SPEED);
 			this.pityJumpTimer = game.time.now + TIME_BETWEEN_JUMPS;
         }
-        if (this.mKey.isDown)
+        if (pad2.justPressed(Phaser.Gamepad.XBOX360_STICK_RIGHT_X)|| game.input.keyboard.isDown(Phaser.Keyboard.M))
         {
         }
     
