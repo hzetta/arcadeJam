@@ -25,10 +25,17 @@ GamePlayManager = {
 
         var carlosFondoArco;
         var pityFondoArco;
+        var carlosTechoArco;
+        var pityTechoArco;
 
 
         var golesCarlos = 0;
         var golesPity = 0;
+        var timerPartido;
+        var txtGolesCarlos;
+        var txtGolesPity;
+        var txtTimerPartido;
+
         //game.load.audio('music', ['assets/sonidos/fondoMusica.ogg']);
 
         game.load.audio('music', ['assets/sonidos/fondoMusica.ogg', 'assets/sonidos/fondoMusica.mp3'])
@@ -41,7 +48,7 @@ GamePlayManager = {
         game.load.spritesheet('pity', 'assets/images/pity_movimiento.png', 105, 115, 9);
         game.load.spritesheet('carlos', 'assets/images/carlos_movimiento.png', 105, 114, 9);
         game.load.image("fondoArco", "assets/images/fondo_arco.png");
-
+        game.load.image("techoArco", "assets/images/techo_arco.png");
     },
     //create == start (unity).
     create: function() {
@@ -59,6 +66,10 @@ GamePlayManager = {
 
         //game.physics.p2.setImpactEvents(true);
 
+        //inicializaciones
+        this.golesCarlos = 0;
+        this.golesPity = 0;
+        this.timerPartido = 0;
         game.physics.p2.gravity.y = 500;
 
         var spriteMaterial = game.physics.p2.createMaterial('spriteMaterial');
@@ -79,11 +90,31 @@ GamePlayManager = {
         this.pity.animations.add('izquierda', [8], 12, false);
         this.pity.animations.add('estatico', [0], 12, true);
         this.pity.animations.add('patada', [4], 12, false);
-        this.pelota = game.add.sprite(512, 200, 'pelota');
+        this.pelota = game.add.sprite(76, 200, 'pelota');
         this.paloder = game.add.sprite(1000, 299, 'paloder');
 
         this.carlosFondoArco = game.add.sprite(1,game.world.height - game.cache.getImage('fondoArco').height/2,'fondoArco');
         this.pityFondoArco = game.add.sprite(1000,game.world.height - game.cache.getImage('fondoArco').height/2,'fondoArco');
+
+        this.carlosTechoArco = game.add.sprite(1,game.world.height - game.cache.getImage('fondoArco').height-20,'techoArco');
+        this.pityTechoArco = game.add.sprite(1000,game.world.height - game.cache.getImage('fondoArco').height-20,'techoArco');
+
+
+        this.txtGolesCarlos = game.add.text(320, 690, this.golesCarlos, {
+            font: "45px Arial",
+            fill : '#ffffff',
+            align: "center"
+        });
+        this.txtGolesPity = game.add.text(680, 690, this.golesPity, {
+            font: "45px Arial",
+            fill : '#ffffff',
+            align: "center"
+        });
+        this.txtTimerPartido = game.add.text(460, 690, "00:00", {
+            font: "45px Arial",
+            fill : '#ffffff',
+            align: "center"
+        });
 
         //  Enable for physics. This creates a default rectangular body.
         game.physics.p2.enable([ this.pelota ]);
@@ -92,6 +123,9 @@ GamePlayManager = {
         //game.physics.p2.enable([ this.paloder ]);
         game.physics.p2.enable([ this.pityFondoArco ]);
         game.physics.p2.enable([ this.carlosFondoArco ]);
+        
+        game.physics.p2.enable([ this.pityTechoArco ]);
+        game.physics.p2.enable([ this.carlosTechoArco ]);
 
         // Forma de pelota
         this.pelota.body.setCircle (24,0,0,1);
@@ -100,6 +134,9 @@ GamePlayManager = {
         // Forma de los jugadores
         this.carlos.body.setCircle (38,0,0,0);
         this.pity.body.setCircle (38,0,0,0);
+        this.carlosTechoArco.body.setCircle (58,0,0,0);
+        this.pityTechoArco.body.setCircle (58,0,0,0);
+
 
         // Rotacion de jugadores
         this.carlos.body.fixedRotation = true;
@@ -109,6 +146,8 @@ GamePlayManager = {
 
         this.pityFondoArco.body.static = true;
         this.carlosFondoArco.body.static = true;
+        this.pityTechoArco.body.static = true;
+        this.carlosTechoArco.body.static = true;
 
         // Seteo de materiales para jugadores y pelota
         this.pelota.body.setMaterial(spriteMaterial);
@@ -117,6 +156,8 @@ GamePlayManager = {
         //this.paloder.body.setMaterial(playerMaterial);
         this.pityFondoArco.body.setMaterial(playerMaterial);
         this.carlosFondoArco.body.setMaterial(playerMaterial);
+        this.pityTechoArco.body.setMaterial(playerMaterial);
+        this.carlosTechoArco.body.setMaterial(playerMaterial);
 
         //  Escala de gravedad
         this.pelota.body.data.gravityScale = 3;
@@ -152,34 +193,36 @@ GamePlayManager = {
         //  And before this will happen, we need to turn on impact events for the world
         game.physics.p2.setImpactEvents(true);
 
-        // Musica
-        this.music = game.add.audio('music');
-        this.music.loop = true;
-        this.music.play();
-        this.audioSalto.loop = false;
-        this.audioSalto = game.add.audio('audioSalto');
+        //  Create our Timer
+        this.timerPartido = game.time.create(false);
+        //  Set a TimerEvent to occur after 2 seconds
+        this.timerPartido.loop(1000, this.updateTimer, this);
+        //  Start the timer running - this is important!
+        //  It won't start automatically, allowing you to hook it to button events and the like.
+        this.timerPartido.start();
+
+
+        // // Musica
+        // this.music = game.add.audio('music');
+        // this.music.loop = true;
+        // this.music.play();
+        // this.audioSalto.loop = false;
+        // this.audioSalto = game.add.audio('audioSalto');
+
+
 
     },
 
     goalFun: function(body1, body2) {
-
-        //  body1 is the space ship (as it's the body that owns the callback)
-        //  body2 is the body it impacted with, in this case our panda
-        //  As body2 is a Phaser.Physics.P2.Body object, you access its owner (the sprite) via the sprite property:
-        console.log(body1.id);
-        console.log(body2.id);
-        console.log(this.carlosFondoArco.body.id);
-        console.log(this.pityFondoArco.body.id);
-        console.log(this.pelota.body.id);
-
-
         if (body1.id == this.carlosFondoArco.body.id){
             console.log("Gol pity");
             this.golesPity += 1;
+            this.txtGolesPity.setText(this.golesPity);
         }
         else {
             console.log("Gol carlos");
             this.golesCarlos += 1;
+            this.txtGolesCarlos.setText(this.golesCarlos);
         }
         this.reinicioGol();
     },
@@ -188,6 +231,22 @@ GamePlayManager = {
         this.carlos.reset(150, 100);
         this.pity.reset(874, 100);
         this.pelota.reset(512,200);
+    },
+
+    updateTimer : function() {
+        //console.log(this.timerPartido.ms);
+        var minute = Math.floor(this.timerPartido.ms / 1000 / 60);
+        var second = Math.round((this.timerPartido.ms / 1000) % 60);
+        if (minute < 10){
+            minute = "0" + minute;
+        }
+        if (second < 10){
+            second = "0" + second;
+        }
+        //console.log();
+        //console.log(Math.round((this.timerPartido.ms / 1000) % 60));
+        
+        this.txtTimerPartido.setText(minute + ":" + second);
     },
 
     //Frame a Frame.
@@ -229,7 +288,7 @@ GamePlayManager = {
         {
                 this.carlos.animations.play('static'); 
             }        
-        if (pad1.justPressed(Phaser.Gamepad.XBOX360_STICK_LEFT_Y) && game.time.now > this.carlosJumpTimer)//|| game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)
+        if ((pad1.justPressed(Phaser.Gamepad.XBOX360_STICK_LEFT_Y) || game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) && game.time.now > this.carlosJumpTimer)
         {
             console.log("salto carlos");
             this.carlos.body.moveUp(PLAYER_JUMP_SPEED);
